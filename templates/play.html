@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ player }} | Rock Paper Scissors</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Palette màu phẳng, tinh tế */
+      --bg-body: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      
+      /* Màu sắc đặc trưng không gradient */
+      --rock: #ef4444;
+      --paper: #3b82f6;
+      --scissors: #10b981;
+      
+      --accent: #0f172a; /* Màu đen đậm cho nút/tiêu đề */
+    }
+
+    * { box-sizing: border-box; transition: all 0.2s ease; }
+    
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-body);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Header section */
+    .header {
+      padding: 32px 32px 24px;
+      text-align: center;
+    }
+
+    .player-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--accent);
+    }
+
+    /* Main Arena */
+    .content {
+      padding: 0 32px 32px;
+    }
+
+    .instruction {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .choices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .choice-btn {
+      background: #fff;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      outline: none;
+    }
+
+    .choice-btn .emoji {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+
+    .choice-btn span {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Hover effects dựa trên màu đặc trưng */
+    .choice-btn:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Kết quả & Trạng thái */
+    .status-box {
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .status-waiting {
+      color: var(--text-muted);
+    }
+
+    .status-result {
+      color: #fff;
+      background: var(--accent); /* Nổi bật kết quả */
+      border-color: var(--accent);
+    }
+
+    /* Animation cho trạng thái chờ */
+    .dot-loader {
+      display: flex;
+      gap: 4px;
+    }
+    .dot {
+      width: 6px; height: 6px; background: #cbd5e1; border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1.0); }
+    }
+
+    /* Footer */
+    .footer {
+      padding: 20px 32px;
+      background: #fafafa;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 400px) {
+      .content { padding: 0 20px 24px; }
+      .header { padding: 24px 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="game-card">
+      
+      <div class="header">
+        <div class="player-badge">Người chơi: {{ player }}</div>
+        <h1>Kéo • Búa • Bao</h1>
+      </div>
+
+      <div class="content">
+        <p class="instruction">Lựa chọn nước đi của bạn để bắt đầu</p>
+        
+        <form method="post">
+          <div class="choices-grid">
+            <button class="choice-btn" name="choice" value="ROCK">
+              <span class="emoji">✊</span>
+              <span>BÚA</span>
+            </button>
+            <button class="choice-btn" name="choice" value="PAPER">
+              <span class="emoji">✋</span>
+              <span>BAO</span>
+            </button>
+            <button class="choice-btn" name="choice" value="SCISSORS">
+              <span class="emoji">✌️</span>
+              <span>KÉO</span>
+            </button>
+          </div>
+        </form>
+
+        {% if result %}
+          <div class="status-box status-result">
+            <span>🏆</span>
+            <span>Kết quả: {{ result }}</span>
+          </div>
+        {% else %}
+          <div class="status-box status-waiting">
+            <div class="dot-loader">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <span>Đang chờ đối thủ...</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="footer">
+        <span>Flask Socket Engine</span>
+        <span>© Nhóm 10</span>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
