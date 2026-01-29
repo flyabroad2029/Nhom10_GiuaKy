@@ -220,7 +220,22 @@
             </button>
           </div>
         </form>
-
+        {% if player_choice %}
+        <div class="status-box">
+          <span>👉</span>
+          <span>
+            Bạn đã chọn:
+            {% if player_choice == "ROCK" %}
+              ✊ BÚA
+            {% elif player_choice == "PAPER" %}
+              ✋ BAO
+            {% elif player_choice == "SCISSORS" %}
+              ✌️ KÉO
+            {% endif %}
+          </span>
+        </div>
+        {% endif %}
+        
         {% if result %}
           <div class="status-box status-result">
             <span>🏆</span>
